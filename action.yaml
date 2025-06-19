@@ -1,0 +1,38 @@
+name: 'Setup Node'
+description: 'Setup Node.js and enable package managers'
+inputs:
+  # begin actions/setup-node options
+  node-version:
+    description: 'Version Spec of the version to use. Examples: 12.x, 10.15.1, >=10.15.0.'
+  node-version-file:
+    description: 'File containing the version Spec of the version to use.  Examples: package.json, .nvmrc, .node-version, .tool-versions.'
+  check-latest:
+    description: 'Set this option if you want the action to check for the latest available version that satisfies the version spec.'
+  registry-url:
+    description: 'Optional registry to set up for auth. Will set the registry in a project level .npmrc and .yarnrc file, and set up auth to read in from env.NODE_AUTH_TOKEN.'
+  cache:
+    description: 'Used to specify a package manager for caching in the default directory. Supported values: npm, yarn, pnpm.'
+  # end actions/setup-node options
+  package-managers:
+    description: "Semicolon-delimited list of package managers to enable."
+    required: true
+outputs:
+  cache-hit:
+    description: 'A boolean value to indicate if a cache was hit during setup-node.'
+    value: ${{ steps.setup-node.outputs.cache-hit }}
+  node-version:
+    description: 'The installed node version.'
+    value: ${{ steps.setup-node.outputs.node-version }}
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/setup-node@v4
+      id: setup-node
+      with:
+        node-version: ${{ inputs.node-version }}
+        node-version-file: ${{ inputs.node-version-file }}
+        check-latest: ${{ inputs.check-latest }}
+        registry-url: ${{ inputs.registry-url }}
+        cache: ${{ inputs.cache }}
+    - run: src/main.sh "${{ inputs.package-managers }}"
+      shell: bash
