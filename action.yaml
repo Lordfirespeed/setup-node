@@ -34,7 +34,7 @@ runs:
         check-latest: ${{ inputs.check-latest }}
         registry-url: ${{ inputs.registry-url }}
         cache: ${{ inputs.cache }}
-    - run: "$GITHUB_ACTION_PATH/src/main.sh" "${{ inputs.package-managers }}"
+    - run: '"$GITHUB_ACTION_PATH/src/main.sh" "${{ inputs.package-managers }}"'
       shell: bash
       env:
         GITHUB_ACTION_PATH: ${{ github.action_path }}
